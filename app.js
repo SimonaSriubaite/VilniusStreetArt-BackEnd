@@ -31,8 +31,17 @@ con.connect((err) => {
   });
 });
 
+// GET request to retrieve all vsa
+
 app.get("/", (req, res) => {
-  res.json(users);
+  con.query("SELECT * FROM vsa", (err, result) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("Issue getting data");
+    } else {
+      res.json(result);
+    }
+  });
 });
 
 app.listen(3000, () => console.log("The server is working at port 3000"));
