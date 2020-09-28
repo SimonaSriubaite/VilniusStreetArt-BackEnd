@@ -34,7 +34,13 @@ con.connect((err) => {
 // GET request to retrieve all vsa
 
 app.get("/", (req, res) => {
-  con.query("SELECT * FROM vsa", (err, result) => {
+  let q = "SELECT * FROM vsa";
+
+  if (req.query.district) {
+    q = "SELECT * FROM vsa where district = '" + req.query.district + "'";
+  }
+
+  con.query(q, (err, result) => {
     if (err) {
       console.log(err);
       res.status(400).send("Issue getting data");
@@ -49,7 +55,7 @@ app.get("/", (req, res) => {
 app.post("/", (req, res) => {
   if (req.body.image && req.body.location) {
     con.query(
-      `INSERT INTO vsa (image, author, description, location) VALUES ('${req.body.image}', '${req.body.author}', '${req.body.description}', '${req.body.location}')`,
+      `INSERT INTO vsa (image, author, description, location, district) VALUES ('${req.body.image}', '${req.body.author}', '${req.body.description}', '${req.body.location}', '${req.body.district}')`,
       (err, result) => {
         if (err) {
           console.log(err);
